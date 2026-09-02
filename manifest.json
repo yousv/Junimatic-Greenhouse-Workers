@@ -1,0 +1,21 @@
+{
+  "Name": "Junimatic Greenhouse Workers",
+  "Author": "Yousv",
+  "Version": "1.0.0",
+  "Description": "Place Junimatic portals in the greenhouse to automate planting, watering, fertilizing, and harvesting. Requires Junimatic.",
+  "UniqueID": "yousv.JunimaticGreenhouseWorkers",
+  "EntryDll": "JunimaticGreenhouseWorkers.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": ["Nexus:51537"],
+  "Dependencies": [
+    {
+      "UniqueID": "NermNermNerm.Junimatic",
+      "MinimumVersion": "1.0.0",
+      "IsRequired": true
+    },
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ]
+}
