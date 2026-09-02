@@ -27,7 +27,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
                 () => mod.Config.Enabled,
                 v => mod.Config.Enabled = v,
                 "Enable workers",
-                "Dispatch greenhouse workers from Junimatic portals.");
+                "Allow greenhouse workers to emerge from Junimatic portals.");
             api.AddTextOption(mod: mod.ModManifest,
                 getValue: () => mod.Config.Unlock,
                 setValue: v => mod.Config.Unlock = v,
@@ -38,18 +38,13 @@ namespace Yousv.JunimaticGreenhouseWorkers
                 getValue: () => mod.Config.JunimoSpeed,
                 setValue: v => mod.Config.JunimoSpeed = v,
                 name: () => "Junimo speed",
-                tooltip: () => "Movement speed of greenhouse junimos (vanilla is 3).",
+                tooltip: () => "Movement speed of greenhouse junimos (default is 3).",
                 min: 1, max: 10, interval: 1);
             AddBool(api, mod,
                 () => mod.Config.AllowAllLocations,
                 v => mod.Config.AllowAllLocations = v,
                 "Junimos work any indoors",
                 "Normally Junimos only work in the greenhouse. Turning this on allows Junimo portals to work in any indoor location with tilled soil. Does not work outdoors.");
-            AddBool(api, mod,
-                () => mod.Config.WorkAroundVillagers,
-                v => mod.Config.WorkAroundVillagers = v,
-                "Work around villagers",
-                "When enabled, Junimos will keep working even when villagers are nearby. When off, Junimos stop working if a villager is in the area.");
 
             AddSection(api, mod, "Tasks");
             AddBool(api, mod,
@@ -81,7 +76,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
                 () => mod.Config.BulkCarry,
                 v => mod.Config.BulkCarry = v,
                 "Bulk carry",
-                "When enabled, junimo takes as many seeds/fertilizers as needed for pending work in one chest visit (disabled by default, no items are ever lost).");
+                "When enabled, junimo takes as many seeds/fertilizers as needed for pending work in one chest visit. (enabled by default)");
             AddBool(api, mod,
                 () => mod.Config.AllowShipping,
                 v => mod.Config.AllowShipping = v,
