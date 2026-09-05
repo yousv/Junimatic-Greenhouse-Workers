@@ -1,6 +1,6 @@
 # Junimatic - Greenhouse Workers
 
-SMAPI addon for [Junimatic](https://www.nexusmods.com/stardewvalley/mods/14075) that automates crop work in the greenhouse (or any indoor location with tilled soil).
+SMAPI addon for [Junimatic](https://www.nexusmods.com/stardewvalley/mods/22672) that automates crop work in the greenhouse (or any indoor location with tilled soil).
 
 ## Features
 
