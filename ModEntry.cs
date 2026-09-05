@@ -52,8 +52,11 @@ namespace Yousv.JunimaticGreenhouseWorkers
             {
                 var configMenu = new ModConfigMenu();
                 configMenu.Entry(this);
+                QuickSaveCompat.Entry(this);
             };
         }
+
+        internal void ClearWorkers() => this.workFinder?.ClearAll();
 
         private static void TryApply(Harmony harmony, Action<Harmony> apply, string name)
         {

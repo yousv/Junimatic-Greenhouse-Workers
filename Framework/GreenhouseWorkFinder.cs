@@ -130,7 +130,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
                 if (loc is null)
                     continue;
 
-                if (!loc.characters.Contains(junimo))
+                if (!QuickSaveCompat.IsSaving && !loc.characters.Contains(junimo))
                     loc.characters.Add(junimo);
 
                 if (loc.IsActiveLocation())
@@ -292,6 +292,8 @@ namespace Yousv.JunimaticGreenhouseWorkers
             if (!Context.IsWorldReady || Game1.isTimePaused || !Game1.IsMasterGame)
                 return;
             if (Game1.eventUp || Game1.dialogueUp)
+                return;
+            if (QuickSaveCompat.IsSaving)
                 return;
             if (!GreenhouseUnlock.IsActive(this.mod.Config))
             {
