@@ -240,13 +240,13 @@ namespace Yousv.JunimaticGreenhouseWorkers
                             _ => Color.White
                         };
                         Color lineColor = taskColor * 0.7f;
+                        var center = Game1.GlobalToLocal(Game1.viewport, new Vector2(p.X * 64 + 32, p.Y * 64 + 32));
                         if (i > 0)
                         {
                             var prev = junimo.DebugPlan[i - 1];
                             var pp = prev.Access;
-                            var start = new Vector2(pp.X * 64 + 32 - Game1.viewport.X, pp.Y * 64 + 32 - Game1.viewport.Y);
-                            var end = new Vector2(p.X * 64 + 32 - Game1.viewport.X, p.Y * 64 + 32 - Game1.viewport.Y);
-                            Vector2 edge = end - start;
+                            var start = Game1.GlobalToLocal(Game1.viewport, new Vector2(pp.X * 64 + 32, pp.Y * 64 + 32));
+                            Vector2 edge = center - start;
                             float len = edge.Length();
                             if (len > 0)
                             {
@@ -259,11 +259,11 @@ namespace Yousv.JunimaticGreenhouseWorkers
                         var sz = Game1.smallFont.MeasureString(s);
                         int boxW = Math.Max(26, (int)sz.X + 10);
                         int boxH = 26;
-                        var bg = new Rectangle((int)(p.X * 64 - Game1.viewport.X + 32 - boxW / 2), (int)(p.Y * 64 - Game1.viewport.Y + 20 - boxH / 2), boxW, boxH);
+                        var bg = new Rectangle((int)(center.X - boxW / 2), (int)(center.Y - boxH / 2), boxW, boxH);
                         b.Draw(Game1.staminaRect, bg, Color.Black * 0.6f);
                         var inner = new Rectangle(bg.X + 1, bg.Y + 1, boxW - 2, boxH - 2);
                         b.Draw(Game1.staminaRect, inner, taskColor * 0.9f);
-                        var numPos = new Vector2(p.X * 64 - Game1.viewport.X + 32 - sz.X / 2, p.Y * 64 - Game1.viewport.Y + 20 - sz.Y / 2);
+                        var numPos = new Vector2(center.X - sz.X / 2, center.Y - sz.Y / 2);
                         b.DrawString(Game1.smallFont, s, numPos, Color.Black);
                     }
                 }
@@ -622,9 +622,8 @@ namespace Yousv.JunimaticGreenhouseWorkers
                 }
             }
 
-            var seedId = cachedSeedId;
-            string plantSeedId = seedId;
-            if (plantSeedId is null && this.mod.Config.BulkCarry && junimo.CarriedSeed is not null && junimo.CarriedSeed.Stack > 0)
+            string plantSeedId = cachedSeedId;
+            if (this.mod.Config.BulkCarry && junimo.CarriedSeed is not null && junimo.CarriedSeed.Stack > 0)
                 plantSeedId = junimo.CarriedSeed.QualifiedItemId;
             junimo.LastAccess = next.Access;
             handledTiles.Add(next.Access);
@@ -769,13 +768,31 @@ namespace Yousv.JunimaticGreenhouseWorkers
                     this.ScheduleNext(junimo, network, handledTiles);
                     return;
                 }
+                if (junimo.CarriedSeed is not null)
+                {
+                    if (junimo.CarriedSeed.QualifiedItemId == takenSeed.QualifiedItemId)
+                        takenSeed.Stack += junimo.CarriedSeed.Stack;
+                    else
+                        DropAsDebris(junimo, this.TryDepositAll(network, new List<Item> { junimo.CarriedSeed }));
+                    junimo.CarriedSeed = null;
+                }
                 junimo.CarriedSeed = takenSeed;
 
                 if (shouldFetchAlongside)
                 {
                     Item takenFert = this.TakeFromChest(fertChest, fertId, fertToTake);
                     if (takenFert is not null)
+                    {
+                        if (junimo.CarriedFertilizer is not null)
+                        {
+                            if (junimo.CarriedFertilizer.QualifiedItemId == takenFert.QualifiedItemId)
+                                takenFert.Stack += junimo.CarriedFertilizer.Stack;
+                            else
+                                DropAsDebris(junimo, this.TryDepositAll(network, new List<Item> { junimo.CarriedFertilizer }));
+                            junimo.CarriedFertilizer = null;
+                        }
                         junimo.CarriedFertilizer = takenFert;
+                    }
                 }
 
                 var plantAccess = soil.GetNearestAccessPoint(junimo.CurrentTile);
@@ -1160,6 +1177,14 @@ namespace Yousv.JunimaticGreenhouseWorkers
                     handledTiles.UnionWith(soil.AdjacentAccessPoints);
                     this.ScheduleNext(junimo, network, handledTiles);
                     return;
+                }
+                if (junimo.CarriedFertilizer is not null)
+                {
+                    if (junimo.CarriedFertilizer.QualifiedItemId == takenFert.QualifiedItemId)
+                        takenFert.Stack += junimo.CarriedFertilizer.Stack;
+                    else
+                        DropAsDebris(junimo, this.TryDepositAll(network, new List<Item> { junimo.CarriedFertilizer }));
+                    junimo.CarriedFertilizer = null;
                 }
                 junimo.CarriedFertilizer = takenFert;
 
