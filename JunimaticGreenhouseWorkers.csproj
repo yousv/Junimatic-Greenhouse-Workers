@@ -10,7 +10,7 @@
     <EnableHarmony>true</EnableHarmony>
     <EnableModDeploy>false</EnableModDeploy>
     <EnableModZip>false</EnableModZip>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Yousv</Authors>
     <DebugType>none</DebugType>
   </PropertyGroup>

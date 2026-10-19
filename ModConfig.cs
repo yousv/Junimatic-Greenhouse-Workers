@@ -2,6 +2,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
 {
     public class ModConfig
     {
+        public bool ModEnabled { get; set; } = true;
         public bool Enabled { get; set; } = true;
         public bool ShowTaskBubbles { get; set; } = false;
         public string Unlock { get; set; } = "Crops";

@@ -12,6 +12,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
 
         private Harmony harmony;
         private GreenhouseWorkFinder workFinder;
+        private CutscenePatcher cutscene;
 
         public override void Entry(IModHelper helper)
         {
@@ -32,8 +33,8 @@ namespace Yousv.JunimaticGreenhouseWorkers
             this.workFinder = new GreenhouseWorkFinder(this);
             this.workFinder.Entry();
 
-            var cutscene = new CutscenePatcher();
-            helper.Events.Content.AssetRequested += cutscene.OnAssetRequested;
+            this.cutscene = new CutscenePatcher(this);
+            helper.Events.Content.AssetRequested += this.cutscene.OnAssetRequested;
 
             helper.ConsoleCommands.Add("ghw_clear", "Remove all greenhouse worker junimos and reset pending tasks.", (_, _) =>
             {
@@ -57,6 +58,8 @@ namespace Yousv.JunimaticGreenhouseWorkers
         }
 
         internal void ClearWorkers() => this.workFinder?.ClearAll();
+
+        internal void InvalidateCutscenes() => this.cutscene?.InvalidateCache();
 
         private static void TryApply(Harmony harmony, Action<Harmony> apply, string name)
         {

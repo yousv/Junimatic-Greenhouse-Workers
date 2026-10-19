@@ -22,15 +22,33 @@ namespace Yousv.JunimaticGreenhouseWorkers
 
             api.Register(mod.ModManifest, () => Reset(mod), () => mod.Helper.WriteConfig(mod.Config), false);
 
+            AddBool(api, mod,
+                () => mod.Config.ModEnabled,
+                v =>
+                {
+                    mod.Config.ModEnabled = v;
+                    mod.InvalidateCutscenes();
+                },
+                "Enable mod",
+                "Turns all mod features on or off.");
+
             AddSection(api, mod, "General");
             AddBool(api, mod,
                 () => mod.Config.Enabled,
-                v => mod.Config.Enabled = v,
+                v =>
+                {
+                    mod.Config.Enabled = v;
+                    mod.InvalidateCutscenes();
+                },
                 "Enable workers",
                 "Allow greenhouse workers to emerge from Junimatic portals.");
             api.AddTextOption(mod: mod.ModManifest,
                 getValue: () => mod.Config.Unlock,
-                setValue: v => mod.Config.Unlock = v,
+                setValue: v =>
+                {
+                    mod.Config.Unlock = v;
+                    mod.InvalidateCutscenes();
+                },
                 name: () => "Unlock requirement",
                 tooltip: () => "Junimatic quest required before workers appear: Crops, Animals, Mining, Fishing, Forestry, IndoorPots, or Always.",
                 allowedValues: ModConfig.UnlockOptions);
@@ -109,6 +127,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
         private static void Reset(ModEntry mod)
         {
             var defaults = new ModConfig();
+            mod.Config.ModEnabled = defaults.ModEnabled;
             mod.Config.Enabled = defaults.Enabled;
             mod.Config.ShowTaskBubbles = defaults.ShowTaskBubbles;
             mod.Config.Unlock = defaults.Unlock;
@@ -125,6 +144,7 @@ namespace Yousv.JunimaticGreenhouseWorkers
             mod.Config.VerboseLogging = defaults.VerboseLogging;
             mod.Config.ShowPathDebug = defaults.ShowPathDebug;
             mod.Config.NeverDropItems = defaults.NeverDropItems;
+            mod.InvalidateCutscenes();
         }
 
         private static void AddSection(IGenericModConfigMenuApi api, ModEntry mod, string title)
